@@ -8,9 +8,10 @@ COPY tsconfig.json ./
 COPY prisma ./prisma/
 
 # Install dependencies including dev (for building)
-RUN npm ci
+RUN npm install
 
 COPY src ./src
+COPY public ./public
 
 # Build TypeScript
 RUN npm run build
