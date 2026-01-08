@@ -1,0 +1,63 @@
+name: Bank-Grade CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Generate Prisma Client
+      run: npx prisma generate
+
+    # Validation 1: Check Types
+    - name: TypeScript Compile Check
+      run: npx tsc --noEmit
+
+    # Validation 2: Run Linters
+    # - name: Lint
+    #   run: npm run lint
+
+    # Validation 3: Unit Tests (Once we add them)
+    # - name: Run Tests
+    #   run: npm test
+    #   env:
+    #     DATABASE_URL: postgresql://postgres:password@localhost:5432/test_db
+    #     REDIS_URL: redis://localhost:6379
+
+    - name: Build Project
+      run: npm run build
