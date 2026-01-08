@@ -33,6 +33,10 @@ COPY --from=builder /app/node_modules ./node_modules
 
 # Create a non-root user for security (Bank Requirement)
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Fix permissions
+RUN chown -R appuser:appgroup /app
+
 USER appuser
 
 EXPOSE 10000
