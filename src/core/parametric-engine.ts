@@ -1,6 +1,6 @@
-import { prisma } from '../../data/db';
+import { prisma } from '../data/db';
 import { blockchainService } from './blockchain.service';
-import { logger } from '../../utils/logger';
+import { logger } from '../utils/logger';
 
 export class ParametricEngine {
     /**
