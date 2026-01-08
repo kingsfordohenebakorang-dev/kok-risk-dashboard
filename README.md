@@ -89,3 +89,4 @@ All endpoints require a JSON Web Token (JWT) or API Key.
 
 ---
 *Built by Vibe Coding Assistant*
+# kok-risk
