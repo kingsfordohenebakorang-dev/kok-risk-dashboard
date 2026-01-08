@@ -89,4 +89,15 @@ All endpoints require a JSON Web Token (JWT) or API Key.
 
 ---
 *Built by Vibe Coding Assistant*
+## ☁️ Cloud Deployment
+
+<a href="https://render.com/deploy?repo=https://github.com/kingsfordohenebakorang-dev/kok-risk" target="_blank">
+  <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" />
+</a>
+
+1. Click the button above.
+2. Grant Render access to your GitHub account if prompted.
+3. Click **"Apply Blueprint"** to auto-create Database, Redis, and API.
+
+---
 # kok-risk
