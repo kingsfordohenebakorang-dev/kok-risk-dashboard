@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import { apiRoutes } from './api/routes';
 import { logger } from './utils/logger';
+import openApiSpec from './docs/openapi.json';
 
 const app = express();
 
@@ -22,12 +23,18 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Root Redirect
+app.get('/', (req, res) => {
+    res.redirect('/login.html');
+});
+
+// Documentation Spec Endpoint (Public)
+app.get('/v1/docs/spec', (req, res) => res.json(openApiSpec));
+
 // API Routes
 app.use('/v1', apiRoutes);
 
-// Documentation Spec Endpoint
-import openApiSpec from './docs/openapi.json';
-app.get('/v1/docs/spec', (req, res) => res.json(openApiSpec));
+
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
