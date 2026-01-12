@@ -7,6 +7,8 @@ const evaluateSchema = z.object({
     borrower_id: z.string(),
     loan_amount: z.number().positive(),
     tenor: z.number().int().positive(),
+    monthly_income: z.number().optional(),
+    employment_type: z.enum(['SALARIED', 'GIG', 'SME', 'INFORMAL']).optional(),
 });
 
 export const evaluateRisk = async (req: Request, res: Response) => {
@@ -17,9 +19,9 @@ export const evaluateRisk = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Validation Error', details: validation.error.format() });
         }
 
-        const { borrower_id, loan_amount, tenor } = validation.data;
+        const { borrower_id, loan_amount, tenor, monthly_income, employment_type } = validation.data;
 
-        const result = await decisionEngine.evaluate(borrower_id, loan_amount, tenor);
+        const result = await decisionEngine.evaluate(borrower_id, loan_amount, tenor, monthly_income, employment_type);
 
         return res.json(result);
     } catch (error) {

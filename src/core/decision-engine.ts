@@ -15,7 +15,13 @@ interface EvaluationResult {
 }
 
 export class DecisionEngine {
-    async evaluate(borrowerId: string, amount: number, tenor: number): Promise<EvaluationResult> {
+    async evaluate(
+        borrowerId: string,
+        amount: number,
+        tenor: number,
+        monthlyIncome?: number,
+        employmentType?: 'SALARIED' | 'GIG' | 'SME' | 'INFORMAL'
+    ): Promise<EvaluationResult> {
         const decisionId = crypto.randomUUID();
         logger.info(`Starting evaluation for ${borrowerId}`, { decisionId });
 
@@ -36,6 +42,8 @@ export class DecisionEngine {
             inflowVolatility: volatility,
             loanAmount: amount,
             tenor,
+            monthlyIncome,
+            employmentType
         };
 
         const riskMetrics = calculateExpectedLoss(riskInput);
