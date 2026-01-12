@@ -48,8 +48,9 @@ export class DecisionEngine {
         });
 
         // Compatibility object for Audit/Shadow
-        const riskInput: Partial<RiskInput> = {
+        const riskInput: any = {
             creditScore,
+            inflowVolatility: volatility, // Need to ensure volatility is available
             loanAmount: amount,
             tenor,
             monthlyIncome,

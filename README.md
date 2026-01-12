@@ -88,8 +88,10 @@ All endpoints require a JSON Web Token (JWT) or API Key.
 *   **Environment**: Secrets managed via `.env` (ensure `JWT_SECRET` is set in prod).
 
 ---
-*Built by Vibe Coding Assistant*
+
 ## ☁️ Cloud Deployment
+
+**[👉 Read the Step-by-Step Deployment & Domain Guide](./DEPLOYMENT_GUIDE.md)**
 
 <a href="https://render.com/deploy?repo=https://github.com/kingsfordohenebakorang-dev/kok-risk" target="_blank">
   <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" />

@@ -7,7 +7,7 @@
     class RiskCheckout {
         constructor(config) {
             this.apiKey = config.apiKey;
-            this.endpoint = config.endpoint || 'http://localhost:10000/v1/evaluate';
+            this.endpoint = config.endpoint || '/v1/evaluate';
             this.containerId = config.containerId;
         }
 

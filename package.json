@@ -4,7 +4,7 @@
     "description": "Bank-Grade Risk & Insurance API",
     "main": "dist/server.js",
     "scripts": {
-        "start": "prisma db push && node dist/server.js",
+        "start": "node verify-db.js && prisma db push --accept-data-loss && node dist/server.js",
         "dev": "nodemon src/server.ts",
         "build": "tsc && mkdir -p dist/public && ncp public dist/public",
         "lint": "eslint src/**/*.ts",

@@ -20,81 +20,148 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (!user) return null;
 
-    const menuItems = [
-        { name: 'Dashboard', href: '/dashboard', icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' },
-        { name: 'Clients', href: '/dashboard/clients', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
-        { name: 'New Assessment', href: '/dashboard/assess', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01' },
-        { name: 'Reports', href: '/dashboard/reports', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-        { name: 'API Docs', href: '/dashboard/api', icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' },
-        { name: 'Settings', href: '/dashboard/settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' },
-    ];
+    const NavItem = ({ href, children, icon }: any) => {
+        const isActive = pathname === href;
+        return (
+            <Link
+                href={href}
+                className={`flex items-center px-3 py-2 text-sm font-medium rounded-md mb-1 transition-colors ${isActive
+                    ? 'bg-white/10 text-white'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+            >
+                <span className="opacity-70 mr-3">{icon}</span>
+                {children}
+            </Link>
+        );
+    }
+
+    const SectionTitle = ({ children }: any) => (
+        <h3 className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">
+            {children}
+        </h3>
+    );
 
     return (
-        <div className="flex bg-slate-900 min-h-screen text-slate-100 font-sans">
+        <div className="flex min-h-screen font-sans bg-[#0a2540] text-slate-200">
             {/* Sidebar */}
-            <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col fixed h-full z-10">
-                <div className="p-6">
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
-                        KOK Risk
-                    </h1>
-                    <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Fintech OS v1.0</p>
+            <aside className="w-64 bg-[#0a2540] border-r border-white/10 flex flex-col fixed h-full z-20">
+                <div className="p-5 bg-[#0a2540] border-b border-white/10">
+                    <div className="flex items-center mb-4">
+                        <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold mr-3 shadow-lg shadow-blue-500/50">
+                            K
+                        </div>
+                        <div>
+                            <h1 className="text-sm font-bold text-white tracking-wide">KOK RISK</h1>
+                            <p className="text-[10px] text-slate-400 uppercase">System v1.0</p>
+                        </div>
+                    </div>
+
+                    {/* MARKET SWITCHER */}
+                    <div className="relative group">
+                        <button className="w-full bg-[#0d2f52] hover:bg-[#103a66] border border-blue-900/50 rounded-lg p-2 flex items-center justify-between transition-colors">
+                            <div className="flex items-center">
+                                <span className="text-lg mr-2">🇬🇭</span>
+                                <div className="text-left">
+                                    <p className="text-[10px] text-slate-400 uppercase font-bold">Active Market</p>
+                                    <p className="text-xs font-bold text-white">Ghana (GHS)</p>
+                                </div>
+                            </div>
+                            <span className="text-slate-500 text-xs">▼</span>
+                        </button>
+
+                        {/* Dropdown (Hidden by default, shown on hover/click in a real app) */}
+                        <div className="absolute top-full left-0 w-full mt-1 bg-[#0d2f52] border border-blue-900/50 rounded-lg shadow-xl overflow-hidden hidden group-hover:block z-50">
+                            {/* Disabled Markets */}
+                            <div className="p-2 border-b border-white/5 opacity-50 cursor-not-allowed">
+                                <div className="flex items-center">
+                                    <span className="text-lg mr-2 text-grayscale">🇳🇬</span>
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-300">Nigeria</p>
+                                        <p className="text-[10px] text-slate-500">Coming Soon</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-2 opacity-50 cursor-not-allowed">
+                                <div className="flex items-center">
+                                    <span className="text-lg mr-2 text-grayscale">🇰🇪</span>
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-300">Kenya</p>
+                                        <p className="text-[10px] text-slate-500">Coming Soon</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-2 bg-blue-600/20 text-center border-t border-white/5">
+                                <span className="text-[10px] text-blue-400 font-bold">+ Add Region</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <nav className="flex-1 px-4 space-y-1 mt-4">
-                    {menuItems.map((item) => {
-                        const isActive = pathname === item.href;
-                        return (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors
-                  ${isActive
-                                        ? 'bg-blue-900/30 text-blue-300 border border-blue-800/50'
-                                        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                                    }`}
-                            >
-                                <svg className="mr-3 h-5 w-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} />
-                                </svg>
-                                {item.name}
-                            </Link>
-                        )
-                    })}
+                <nav className="flex-1 px-3 py-4 overflow-y-auto">
+                    <SectionTitle>Overview</SectionTitle>
+                    <NavItem href="/dashboard" icon="📊">Home</NavItem>
+                    <NavItem href="/dashboard/reports" icon="📈">Analytics</NavItem>
+                    <NavItem href="/dashboard/simulation" icon="🔬">Stress Test</NavItem>
+
+                    <SectionTitle>Product</SectionTitle>
+                    <NavItem href="/dashboard/assess" icon="⚡️">New Assessment</NavItem>
+                    <NavItem href="/dashboard/insurance" icon="🛡️">Insurance</NavItem>
+                    <NavItem href="/dashboard/collections" icon="📢">Collections</NavItem>
+                    <NavItem href="/dashboard/clients" icon="👥">Customers</NavItem>
+                    <NavItem href="/dashboard/transactions" icon="💳">Transactions</NavItem>
+
+                    <SectionTitle>Developers</SectionTitle>
+                    <NavItem href="/dashboard/api" icon="🔌">API Keys</NavItem>
+                    <NavItem href="/dashboard/logs" icon="📜">Logs</NavItem>
+                    <NavItem href="/dashboard/webhooks" icon="🎣">Webhooks</NavItem>
+
+                    <SectionTitle>Settings</SectionTitle>
+                    <NavItem href="/dashboard/settings" icon="⚙️">Configuration</NavItem>
+                    <NavItem href="/dashboard/security" icon="🛡️">Security & Audit</NavItem>
+                    <NavItem href="/dashboard/billing" icon="💹">Billing & Usage</NavItem>
                 </nav>
 
-                <div className="p-4 border-t border-slate-800">
+                <div className="p-4 border-t border-white/10 bg-[#081e35]">
                     <button
                         onClick={() => { localStorage.clear(); router.push('/login'); }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors"
+                        className="flex items-center text-xs text-slate-400 hover:text-white transition-colors w-full"
                     >
-                        <svg className="mr-3 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Sign Out
+                        <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 mr-2"></div>
+                        <div className="text-left flex-1 truncate">
+                            <p className="font-medium text-white">{user.email}</p>
+                            <p className="text-[10px]">{user.org?.name?.toUpperCase()}</p>
+                        </div>
+                        <span className="text-slate-500">↗</span>
                     </button>
                 </div>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 ml-64 p-8 bg-slate-950 min-h-screen">
-                <div className="max-w-7xl mx-auto">
-                    {/* Top Bar */}
-                    <header className="flex justify-between items-center mb-8">
-                        <h2 className="text-2xl font-bold text-white">
-                            {menuItems.find(i => i.href === pathname)?.name || 'Overview'}
-                        </h2>
-                        <div className="flex items-center space-x-4">
-                            <div className="text-right hidden md:block">
-                                <p className="text-sm font-medium text-white">{user.email}</p>
-                                <p className="text-xs text-slate-400">{user.org?.name} • {user.role}</p>
-                            </div>
-                            <div className="h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold border border-indigo-400">
-                                {user.email[0].toUpperCase()}
-                            </div>
+            <main className="flex-1 ml-64 bg-[#f7f9fc] min-h-screen relative">
+                {/* Top Navbar (Stripe Search style) */}
+                <div className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10 shadow-sm">
+                    <div className="flex-1 max-w-lg">
+                        <div className="relative">
+                            <span className="absolute left-3 top-2.5 text-slate-400">🔍</span>
+                            <input
+                                className="w-full bg-slate-100 border-none rounded-md py-2 pl-10 pr-4 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-slate-500"
+                                placeholder="Search borrowers, logs, or settings..."
+                            />
+                            <div className="absolute right-3 top-2.5 text-xs text-slate-400 border border-slate-300 rounded px-1.5 shadow-sm">/</div>
                         </div>
-                    </header>
+                    </div>
 
-                    {/* Page Content */}
+                    <div className="flex items-center space-x-4 ml-4">
+                        <button className="text-xs font-medium text-slate-600 hover:text-slate-900">Feedback</button>
+                        <button className="text-xs font-medium text-slate-600 hover:text-slate-900">Help</button>
+                        <div className="h-4 w-px bg-slate-300 mx-2"></div>
+                        <button className="text-xs font-medium text-slate-600 hover:text-slate-900">Docs</button>
+                    </div>
+                </div>
+
+                {/* Page Content Container */}
+                <div className="max-w-7xl mx-auto px-8 py-8">
                     {children}
                 </div>
             </main>
