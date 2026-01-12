@@ -111,15 +111,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <NavItem href="/dashboard/clients" icon="👥">Customers</NavItem>
                     <NavItem href="/dashboard/transactions" icon="💳">Transactions</NavItem>
 
-                    <SectionTitle>Developers</SectionTitle>
-                    <NavItem href="/dashboard/api" icon="🔌">API Keys</NavItem>
-                    <NavItem href="/dashboard/logs" icon="📜">Logs</NavItem>
-                    <NavItem href="/dashboard/webhooks" icon="🎣">Webhooks</NavItem>
+                    {/* ONLY SHOW FOR ADMINS */}
+                    {user.role !== 'ANALYST' && (
+                        <>
+                            <SectionTitle>Developers</SectionTitle>
+                            <NavItem href="/dashboard/api" icon="🔌">API Keys</NavItem>
+                            <NavItem href="/dashboard/logs" icon="📜">Logs</NavItem>
+                            <NavItem href="/dashboard/webhooks" icon="🎣">Webhooks</NavItem>
 
-                    <SectionTitle>Settings</SectionTitle>
-                    <NavItem href="/dashboard/settings" icon="⚙️">Configuration</NavItem>
-                    <NavItem href="/dashboard/security" icon="🛡️">Security & Audit</NavItem>
-                    <NavItem href="/dashboard/billing" icon="💹">Billing & Usage</NavItem>
+                            <SectionTitle>Settings</SectionTitle>
+                            <NavItem href="/dashboard/settings" icon="⚙️">Configuration</NavItem>
+                            <NavItem href="/dashboard/security" icon="🛡️">Security & Audit</NavItem>
+                            <NavItem href="/dashboard/billing" icon="💹">Billing & Usage</NavItem>
+                        </>
+                    )}
                 </nav>
 
                 <div className="p-4 border-t border-white/10 bg-[#081e35]">

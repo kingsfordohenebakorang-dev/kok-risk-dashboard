@@ -19,8 +19,32 @@ export default function LoginPage() {
             // Use Env Var if available, otherwise fallback to Live Backend
             const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://kok-risk-git-main-kingsfords-projects-45482bf6.vercel.app';
 
-            // DEMO BYPASS: If backend is down, allow demo user to enter
-            if (email === 'demo@risk.co' && password === 'demo123') {
+            // DEFINITIONS
+            const cleanEmail = email.trim().toLowerCase();
+            const cleanPass = password.trim();
+
+            // DEBUGGING: Check what is actually being submitted
+            console.log('Attempting Login:', { cleanEmail, cleanPass });
+
+            // 1. CHECK ANALYST
+            if (cleanEmail === 'analyst@risk.co' && cleanPass === 'view123') {
+                console.log('✅ Analyst Login Match');
+                const analystUser = {
+                    id: 'usr_analyst_001',
+                    name: 'Junior Analyst',
+                    email: 'analyst@risk.co',
+                    role: 'ANALYST',
+                    permissions: ['VIEW_REPORTS', 'VIEW_DASHBOARD']
+                };
+                localStorage.setItem('token', 'analyst_token_xyz');
+                localStorage.setItem('user', JSON.stringify(analystUser));
+                router.push('/dashboard'); // Removed timeout to speed up
+                return; // 🛑 STOP HERE
+            }
+
+            // 2. CHECK ADMIN
+            if (cleanEmail === 'demo@risk.co' && cleanPass === 'demo123') {
+                console.log('✅ Admin Login Match');
                 const fakeUser = {
                     id: 'usr_demo_123',
                     name: 'Demo Admin',
@@ -30,18 +54,26 @@ export default function LoginPage() {
                 };
                 localStorage.setItem('token', 'demo_token_xyz');
                 localStorage.setItem('user', JSON.stringify(fakeUser));
-                // Simulate network delay
-                await new Promise(r => setTimeout(r, 1000));
                 router.push('/dashboard');
-                return;
+                return; // 🛑 STOP HERE
             }
 
+            console.log('❌ No local match. Credentials provided:', { cleanEmail, cleanPass });
+
+            // AUTOMATIC FAILURE for now to prevent "Load Failed" error
+            // This confirms if the issue is just a wrong password.
+            throw new Error('Invalid Credentials (Demo Mode Only). Please use analyst@risk.co / view123');
+
+            /* 
+            // DISABLE BACKEND FETCH TEMPORARILY
             const res = await fetch(`${API_URL}/v1/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
+            */
 
+            /*
             const data = await res.json();
 
             if (!res.ok) {
@@ -54,6 +86,7 @@ export default function LoginPage() {
 
             // Redirect to Dashboard
             router.push('/dashboard');
+            */
 
         } catch (err: any) {
             console.error('Login Error:', err);

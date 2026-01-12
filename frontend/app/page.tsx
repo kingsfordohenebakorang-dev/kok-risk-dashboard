@@ -175,9 +175,11 @@ export default function LandingPage() {
               Request Demo
             </button>
           </Link>
-          <button className="px-8 py-3 bg-white text-slate-900 font-bold rounded-lg hover:bg-slate-100 transition-colors">
-            Contact Sales
-          </button>
+          <a href="mailto:sales@kok-risk.com?subject=Enterprise%20Inquiry%20-%20KOK%20Risk">
+            <button className="px-8 py-3 bg-white text-slate-900 font-bold rounded-lg hover:bg-slate-100 transition-colors">
+              Contact Sales
+            </button>
+          </a>
         </div>
       </section>
 

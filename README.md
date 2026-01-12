@@ -101,5 +101,5 @@ All endpoints require a JSON Web Token (JWT) or API Key.
 2. Grant Render access to your GitHub account if prompted.
 3. Click **"Apply Blueprint"** to auto-create Database, Redis, and API.
 
----
+---ha
 # kok-risk
