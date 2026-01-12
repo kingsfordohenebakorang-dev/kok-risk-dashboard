@@ -42,11 +42,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Link
                 href={href}
                 className={`flex items-center px-3 py-2 text-sm font-medium rounded-md mb-1 transition-colors ${isActive
-                    ? 'bg-white/10 text-emerald-400'
+                    ? 'bg-white/10 text-white'
                     : 'text-slate-400 hover:text-white hover:bg-white/5'
                     }`}
             >
-                <span className={`mr-3 ${isActive ? 'text-emerald-400' : 'text-slate-500 group-hover:text-slate-300'}`}>{icon}</span>
+                <span className={`mr-3 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>{icon}</span>
                 {children}
             </Link>
         );
@@ -64,12 +64,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <aside className="w-64 bg-[#0a2540] border-r border-white/10 flex flex-col fixed h-full z-20 shadow-2xl">
                 <div className="p-5 bg-[#0a2540] border-b border-white/10">
                     <div className="flex items-center mb-6">
-                        <div className="h-8 w-8 bg-emerald-500 rounded-lg flex items-center justify-center text-[#0a2540] font-bold mr-3 shadow-lg shadow-emerald-500/20">
+                        <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold mr-3 shadow-lg shadow-blue-500/50">
                             K
                         </div>
                         <div>
                             <h1 className="text-sm font-bold text-white tracking-wide">KOK RISK</h1>
-                            <p className="text-[10px] text-emerald-500 font-mono">v2.4.0-ENTERPRISE</p>
+                            <p className="text-[10px] text-slate-400 uppercase">System v1.0</p>
                         </div>
                     </div>
 
@@ -143,11 +143,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         onClick={() => { localStorage.clear(); router.push('/login'); }}
                         className="flex items-center text-xs text-slate-400 hover:text-white transition-colors w-full group"
                     >
-                        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 mr-2 flex items-center justify-center font-bold text-[#0a2540]">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 mr-2 flex items-center justify-center font-bold text-white">
                             {user.name.charAt(0)}
                         </div>
                         <div className="text-left flex-1 truncate">
-                            <p className="font-medium text-white group-hover:text-emerald-400 transition-colors">{user.name}</p>
+                            <p className="font-medium text-white group-hover:text-blue-400 transition-colors">{user.name}</p>
                             <p className="text-[10px] opacity-70">{user.role}</p>
                         </div>
                         <span className="text-slate-500 group-hover:translate-x-1 transition-transform">→</span>
