@@ -58,11 +58,27 @@ export default function LoginPage() {
                 return; // 🛑 STOP HERE
             }
 
+            // 3. CHECK UNDERWRITER
+            if (cleanEmail === 'underwriter@risk.co' && cleanPass === 'under123') {
+                console.log('✅ Underwriter Login Match');
+                const underwriterUser = {
+                    id: 'usr_under_001',
+                    name: 'Senior Underwriter',
+                    email: 'underwriter@risk.co',
+                    role: 'UNDERWRITER',
+                    permissions: ['VIEW_RISK_MODELS', 'EDIT_POLICIES']
+                };
+                localStorage.setItem('token', 'underwriter_token_xyz');
+                localStorage.setItem('user', JSON.stringify(underwriterUser));
+                router.push('/dashboard');
+                return; // 🛑 STOP HERE
+            }
+
             console.log('❌ No local match. Credentials provided:', { cleanEmail, cleanPass });
 
             // AUTOMATIC FAILURE for now to prevent "Load Failed" error
             // This confirms if the issue is just a wrong password.
-            throw new Error('Invalid Credentials (Demo Mode Only). Please use analyst@risk.co / view123');
+            throw new Error('Invalid Credentials (Demo Mode Only). Try: analyst@risk.co (view123), demo@risk.co (demo123), or underwriter@risk.co (under123)');
 
             /* 
             // DISABLE BACKEND FETCH TEMPORARILY
@@ -157,6 +173,23 @@ export default function LoginPage() {
                         {loading ? 'Authenticating...' : 'Secure Login'}
                     </button>
                 </form>
+
+                <div className="mt-6">
+                    <details className="text-xs text-slate-500 cursor-pointer">
+                        <summary className="hover:text-blue-400 transition-colors">View Demo Credentials</summary>
+                        <div className="mt-2 p-3 bg-slate-900/50 rounded border border-slate-700 text-left space-y-2">
+                            <div>
+                                <span className="font-bold text-slate-300">Analyst:</span> analyst@risk.co / view123
+                            </div>
+                            <div>
+                                <span className="font-bold text-slate-300">Admin:</span> demo@risk.co / demo123
+                            </div>
+                            <div>
+                                <span className="font-bold text-slate-300">Underwriter:</span> underwriter@risk.co / under123
+                            </div>
+                        </div>
+                    </details>
+                </div>
 
                 <div className="mt-6 text-center text-xs text-slate-500">
                     SECURED BY AUDIT VAULT • 256-BIT ENCRYPTION

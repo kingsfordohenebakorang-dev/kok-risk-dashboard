@@ -1,77 +1,87 @@
 import { AffordabilityModule } from './modules/affordability.module';
 import { AlternativeDataModule } from './modules/alternative-data.module';
-import { calculateProbabilityOfDefault, calculateRiskGrade, Weights } from './formulas';
+import { NormalizationModule } from './modules/normalization.module';
+import { FeatureEngineeringModule } from './modules/feature-engineering.module';
+import { ModelInferenceModule } from './modules/model-inference.module';
+import { RiskEngineInput, DecisionPacket, RiskFeatures } from './types';
+import { logger } from '../../utils/logger';
 
-export interface RiskEngineInput {
-    borrowerId: string;
-    amount: number;
-    tenor: number;
-    income: number;
-    employmentType: 'SALARIED' | 'SME' | 'GIG' | 'INFORMAL';
-    bureauScore?: number; // Optional Bureau Score
-}
-
-export interface RiskEngineOutput {
-    score: number;
-    grade: string;
-    pd: number;
-    approved: boolean;
-    breakdown: any;
-}
+export { RiskEngineInput, DecisionPacket };
 
 export class RiskEngineOrchestrator {
     private affordability = new AffordabilityModule();
     private altData = new AlternativeDataModule();
+    private normalization = new NormalizationModule();
+    private features = new FeatureEngineeringModule();
+    private inference = new ModelInferenceModule();
 
-    public async evaluate(input: RiskEngineInput): Promise<RiskEngineOutput> {
+    public async evaluate(input: RiskEngineInput): Promise<DecisionPacket> {
+        logger.info(`Risk Engine: Evaluating ${input.borrowerId}`);
 
-        // 1. Run Modules
+        // 1. Data Ingestion & Normalization (ETL)
+        // Convert raw MoMo/Bank transactions into Common Data Model
+        const normalizedTxs = this.normalization.process(input.transactions || []);
+
+        // 2. Feature Engineering
+        // Calculate Behavioral Predictors (Zero-Balance, Burn Rate, etc.)
+        const riskFeatures = this.features.extractFeatures(normalizedTxs);
+
+        // 3. Run Traditional Modules (Legacy/Baseline support)
         const affordResult = this.affordability.evaluate({
             monthlyIncome: input.income,
             loanAmount: input.amount,
             tenorDays: input.tenor
         });
-
         const altResult = this.altData.evaluate({
             employmentType: input.employmentType
         });
 
-        const bureauScore = input.bureauScore || 600; // Default if no bureau
+        // 4. Model Inference (Classification & Regression)
+        const anomalyDetected = await this.inference.detectAnomalies(riskFeatures);
+        let pd = await this.inference.predictProbabilityOfDefault(riskFeatures);
 
-        // 2. Aggregate Score
-        // Formula: (Bureau * 0.3) + (Affordability * 0.4) + (AltData * 0.3)
-        const weightedScore =
-            (bureauScore * Weights.CREDIT_HISTORY / 8.50) + // Normalize 850 base to 100 roughly
-            (affordResult.score * Weights.AFFORDABILITY) +
-            (altResult.score * Weights.ALTERNATIVE_DATA);
+        // Adjust PD based on legacy modules if needed (Ensemble effect)
+        // If affordability is bad, PD goes up.
+        if (affordResult.dti > 0.5) pd += 0.1;
 
-        // Scale back up to 0-850 range for display familiar to banks? 
-        // Or keep 0-100. Let's stick to 0-100 for internal Logic, but mapped to 850 if needed.
-        // Let's use 0-100 internal score.
+        const { maxAmount, interestRate } = await this.inference.predictLoanTerms(pd, input.amount, input.income);
 
-        const finalScore = Math.floor(weightedScore);
+        // 5. Decision Rules
+        const score = Math.floor((1 - pd) * 100);
+        let approved = (score > 50) && (affordResult.dti < 0.60) && (!anomalyDetected);
 
-        // 3. Calculate Derived Metrics
-        const pd = calculateProbabilityOfDefault(finalScore * 8.5); // scaling 100 -> 850 for formula
-        const grade = calculateRiskGrade(finalScore * 8.5);
+        let grade = 'F';
+        if (score >= 80) grade = 'A';
+        else if (score >= 70) grade = 'B';
+        else if (score >= 60) grade = 'C';
+        else if (score >= 50) grade = 'D';
 
-        // 4. Decision Rule
-        // Approve if Score > 50 AND DTI < 60%
-        const isAffordable = affordResult.dti <= 0.60;
-        const isScorePassing = finalScore > 50;
-        const approved = isAffordable && isScorePassing;
+        const decisionId = `dec_${new Date().getTime()}_${input.borrowerId.substring(0, 4)}`;
 
         return {
-            score: finalScore,
-            grade,
-            pd,
+            decisionId,
             approved,
-            breakdown: {
-                affordability: affordResult,
-                altData: altResult,
-                bureau: bureauScore
-            }
+            score,
+            grade,
+            probabilityOfDefault: pd,
+            pricing: {
+                interestRate,
+                maxLoanAmount: maxAmount,
+                currency: 'GHS'
+            },
+            riskFactors: this.generateRiskFactors(riskFeatures, anomalyDetected),
+            features: riskFeatures,
+            timestamp: new Date()
         };
+    }
+
+    private generateRiskFactors(features: RiskFeatures, anomaly: boolean): any[] {
+        const factors = [];
+        if (anomaly) factors.push({ factor: 'ANOMALY_DETECTED', impact: 'HIGH', description: 'Suspicious transaction pattern detected (Loan Grooming).' });
+        if (features.zeroBalanceDays > 5) factors.push({ factor: 'LIQUIDITY_STRESS', impact: 'HIGH', description: 'Frequent zero-balance days.' });
+        if (features.debtStackingDetected) factors.push({ factor: 'DEBT_STACKING', impact: 'HIGH', description: 'Multiple concurrent lenders detected.' });
+        if (features.gamblingVelocity > 5) factors.push({ factor: 'GAMBLING_RISK', impact: 'MEDIUM', description: 'High frequency betting activity.' });
+        return factors;
     }
 }
 
