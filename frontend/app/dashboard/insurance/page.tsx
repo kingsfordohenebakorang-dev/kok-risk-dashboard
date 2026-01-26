@@ -98,7 +98,7 @@ function PolicyRow({ id, refId, amount, trigger, status }: any) {
                 <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${statusColor}`}>{status}</span>
             </td>
             <td className="px-4 py-3 text-right">
-                <Link href={`/dashboard/insurance/${id}`} className="text-blue-600 hover:text-blue-800 text-xs font-semibold hover:underline">
+                <Link href={`/dashboard/insurance/${id}`} className="inline-block border border-blue-200 bg-blue-50 text-blue-700 px-3 py-1 rounded text-xs font-bold hover:bg-blue-100 transition-colors">
                     View Cert
                 </Link>
             </td>
