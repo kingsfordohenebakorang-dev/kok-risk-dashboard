@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function InsurancePage() {
     return (
         <div className="space-y-8">
@@ -96,7 +98,9 @@ function PolicyRow({ id, refId, amount, trigger, status }: any) {
                 <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${statusColor}`}>{status}</span>
             </td>
             <td className="px-4 py-3 text-right">
-                <button className="text-blue-600 hover:text-blue-800 text-xs font-semibold">View Cert</button>
+                <Link href={`/dashboard/insurance/${id}`} className="text-blue-600 hover:text-blue-800 text-xs font-semibold hover:underline">
+                    View Cert
+                </Link>
             </td>
         </tr>
     )
