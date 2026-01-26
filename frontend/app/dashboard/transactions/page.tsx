@@ -4,8 +4,8 @@ export default function TransactionsPage() {
             <div className="flex justify-between items-center">
                 <h1 className="text-xl font-bold text-slate-900">Transactions</h1>
                 <div className="flex gap-2">
-                    <button className="px-3 py-1.5 text-sm bg-white border border-slate-300 rounded shadow-sm text-slate-700">Filter</button>
-                    <button className="px-3 py-1.5 text-sm bg-white border border-slate-300 rounded shadow-sm text-slate-700">Export</button>
+                    <button onClick={() => alert('Filter Modal: Coming Soon')} className="px-3 py-1.5 text-sm bg-white border border-slate-300 rounded shadow-sm text-slate-700 hover:bg-slate-50 transition-colors">Filter</button>
+                    <button onClick={() => alert('Exporting to CSV...')} className="px-3 py-1.5 text-sm bg-white border border-slate-300 rounded shadow-sm text-slate-700 hover:bg-slate-50 transition-colors">Export</button>
                 </div>
             </div>
 
