@@ -97,7 +97,7 @@ export default function NewAssessmentPage() {
                                                         statusSpan.innerHTML = 'Found: Kojo Mensah (Score 720)';
                                                         statusSpan.className = "text-xs text-emerald-600 mt-1 block animate-in fade-in";
                                                     }
-                                                    (document.getElementsByName('history')[0] as HTMLInputElement).value = 'GOOD';
+                                                    (document.getElementsByName('history')[0] as HTMLInputElement).value = '';
                                                 }, 1500);
                                             }}
                                             className="bg-[#0a2540] hover:bg-slate-800 text-white px-3 py-2 rounded text-xs font-bold shadow-sm transition-colors"
@@ -202,14 +202,14 @@ export default function NewAssessmentPage() {
                                             setTimeout(() => {
                                                 // Auto-fill logic based on Data Source
                                                 if (dataSource === 'MOMO') {
-                                                    (document.getElementsByName('momoInflow')[0] as HTMLInputElement).value = '4250.00';
+                                                    (document.getElementsByName('momoInflow')[0] as HTMLInputElement).value = '';
                                                     (document.getElementsByName('walletAge')[0] as HTMLSelectElement).value = '>2Y';
-                                                    (document.getElementsByName('zeroBal')[0] as HTMLInputElement).value = '1';
+                                                    (document.getElementsByName('zeroBal')[0] as HTMLInputElement).value = '';
                                                     (document.getElementsByName('employment')[0] as HTMLSelectElement).value = 'SME';
                                                 } else {
-                                                    (document.getElementsByName('monthlySalary')[0] as HTMLInputElement).value = '8500.00';
+                                                    (document.getElementsByName('monthlySalary')[0] as HTMLInputElement).value = '';
                                                     (document.getElementsByName('bankAccountAge')[0] as HTMLSelectElement).value = '>5Y';
-                                                    (document.getElementsByName('employer')[0] as HTMLInputElement).value = 'Tullow Oil Ghana';
+                                                    (document.getElementsByName('employer')[0] as HTMLInputElement).value = '';
                                                     (document.getElementsByName('employment')[0] as HTMLSelectElement).value = 'SALARIED';
                                                 }
                                                 btn.innerHTML = `<span class="text-emerald-600">✅ Analysis Complete. Data Extracted.</span>`;
