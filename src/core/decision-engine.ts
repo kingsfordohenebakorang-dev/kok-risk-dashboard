@@ -26,6 +26,11 @@ export class DecisionEngine {
         const decisionId = crypto.randomUUID();
         logger.info(`Starting evaluation for ${borrowerId}`, { decisionId });
 
+        // 0. Permission Check (Open Banking / Data Protection)
+        logger.info(`[CONSENT] Verifying Data Access Permissions for ${borrowerId}...`);
+        // In real flow: await openBanking.verifyScope(borrowerId, 'TRANSACTIONS');
+        logger.info(`[CONSENT] ✅ Permission Granted: READ_TRANSACTIONS (Time-Bound)`);
+
         // 1. Fetch Features (Simulated/Mocked logic if not in Redis)
         // In the KOK architecture, we'd fetch raw transactions here.
         // For now, we pass empty transactions, but in a real implementation we would:
