@@ -118,7 +118,7 @@ function QueueRow({ name, dpd, score, amount }: any) {
             <td className="px-6 py-4 text-slate-500">{score}</td>
             <td className="px-6 py-4 font-mono">{amount}</td>
             <td className="px-6 py-4 text-right">
-                <button className="text-blue-600 hover:text-blue-800 text-xs font-bold border border-blue-200 px-3 py-1 rounded hover:bg-blue-50">Call 📞</button>
+                <a href="tel:+233240000000" className="inline-block text-blue-600 hover:text-blue-800 text-xs font-bold border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors">Call 📞</a>
             </td>
         </tr>
     )
