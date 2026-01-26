@@ -16,11 +16,11 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {/* Metric Cards - Stripe Style */}
+            {/* Metric Cards - Stripe Style (Zeroed Out for Testing) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card title="Gross Volume" value="GHS 1,240,500" trend="+12.5%" trendPositive={true} />
-                <Card title="Active Loans / Customers" value="342" trend="+4 this week" trendPositive={true} />
-                <Card title="Net Risk Exposure" value="14.2%" trend="-0.4%" trendPositive={true} />
+                <Card title="Gross Volume" value="GHS 0.00" trend="-" trendPositive={false} />
+                <Card title="Active Loans / Customers" value="0" trend="0 this week" trendPositive={false} />
+                <Card title="Net Risk Exposure" value="0.0%" trend="-" trendPositive={true} />
             </div>
 
             {/* Charts & Lists */}
@@ -28,15 +28,11 @@ export default function DashboardPage() {
                 {/* Main Chart Area */}
                 <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                     <h3 className="text-sm font-bold text-slate-700 mb-6 border-b border-slate-100 pb-2">Loan Volume (30D)</h3>
-                    <div className="h-64 flex items-end space-x-2 px-2">
-                        {/* Fake Bar Chart */}
-                        {[30, 45, 35, 50, 40, 60, 55, 70, 65, 50, 60, 75, 80, 70, 60, 50, 40, 55, 65, 70, 75, 80, 85, 90, 85, 80, 70, 60, 65, 75].map((h, i) => (
-                            <div key={i} className="flex-1 bg-blue-500 rounded-t-sm hover:bg-blue-600 transition-all cursor-pointer relative group" style={{ height: `${h}%` }}>
-                                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-10">
-                                    Day {i + 1}: ${h * 1000}
-                                </div>
-                            </div>
-                        ))}
+                    <div className="h-64 flex items-end justify-center space-x-2 px-2 bg-slate-50 border border-dashed border-slate-200 rounded">
+                        <div className="text-center text-slate-400">
+                            <span className="text-2xl block mb-2">📉</span>
+                            <span className="text-sm font-medium">No activity data yet</span>
+                        </div>
                     </div>
                 </div>
 
@@ -54,9 +50,9 @@ export default function DashboardPage() {
                     <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                         <h3 className="text-sm font-bold text-slate-700 mb-4">System Status</h3>
                         <div className="space-y-3">
-                            <StatusRow label="Risk Engine" status="Operational" />
-                            <StatusRow label="Audit Vault" status="Operational" />
-                            <StatusRow label="Bank Integrations" status="Degraded" />
+                            <StatusRow label="Risk Engine" status="Online" />
+                            <StatusRow label="Audit Vault" status="Standby" />
+                            <StatusRow label="Bank Integrations" status="Connected" />
                         </div>
                     </div>
                 </div>
@@ -66,7 +62,6 @@ export default function DashboardPage() {
             <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
                     <h3 className="text-sm font-bold text-slate-700">Recent Transactions</h3>
-                    <button className="text-xs font-semibold text-blue-600 hover:text-blue-800">View All</button>
                 </div>
                 <table className="w-full text-left text-sm">
                     <thead className="bg-slate-50 text-slate-500 font-semibold uppercase text-xs">
@@ -79,11 +74,12 @@ export default function DashboardPage() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-600">
-                        <TableRow amount="GHS 5,000.00" desc="SME Loan Request" cust="james@k.com" date="Today, 10:23 AM" status="Succeeded" />
-                        <TableRow amount="KES 120,000.00" desc="Micro-Credit" cust="sarah@m.co" date="Yesterday" status="Pending" />
-                        <TableRow amount="NGN 50,000.00" desc="Overdraft" cust="emmanuel@o.ng" date="Oct 24" status="Failed" />
-                        <TableRow amount="GHS 1,500.00" desc="Personal Loan" cust="kwame@gh.com" date="Oct 23" status="Succeeded" />
-                        <TableRow amount="USD 500.00" desc="Bridge Finance" cust="zainab@tech.co" date="Oct 23" status="Succeeded" />
+                        {/* Empty State */}
+                        <tr>
+                            <td colSpan={5} className="px-6 py-12 text-center text-slate-400 font-medium">
+                                No recent transactions found. Start a new assessment.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
