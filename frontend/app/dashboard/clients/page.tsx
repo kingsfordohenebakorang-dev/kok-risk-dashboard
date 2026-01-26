@@ -1,14 +1,16 @@
+import Link from 'next/link';
+
 export default function ClientsPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-white">Client Management</h1>
-                <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                <h1 className="text-2xl font-bold text-slate-900">Client Management</h1>
+                <Link href="/dashboard/clients/add" className="bg-[#0a2540] hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
                     + Add Client
-                </button>
+                </Link>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
                 <table className="w-full text-left text-sm text-slate-400">
                     <thead className="bg-slate-800/50 text-xs uppercase font-semibold text-slate-500">
                         <tr>
@@ -20,19 +22,27 @@ export default function ClientsPage() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800">
-                        <tr>
+                        <tr className="hover:bg-slate-800/30 transition-colors">
                             <td className="p-4 text-white font-medium">James K.</td>
                             <td className="p-4 font-mono">USR-2024-001</td>
-                            <td className="p-4"><span className="bg-emerald-900/30 text-emerald-400 text-xs px-2 py-1 rounded">Low Risk</span></td>
+                            <td className="p-4"><span className="bg-emerald-900/30 text-emerald-400 text-xs px-2 py-1 rounded border border-emerald-900/50">Low Risk</span></td>
                             <td className="p-4">Active</td>
-                            <td className="p-4 text-blue-400 cursor-pointer hover:underline">View</td>
+                            <td className="p-4">
+                                <Link href="/dashboard/clients/USR-2024-001" className="text-blue-400 hover:text-blue-300 font-medium hover:underline">
+                                    View
+                                </Link>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr className="hover:bg-slate-800/30 transition-colors">
                             <td className="p-4 text-white font-medium">Sarah M.</td>
                             <td className="p-4 font-mono">USR-2024-005</td>
-                            <td className="p-4"><span className="bg-amber-900/30 text-amber-400 text-xs px-2 py-1 rounded">Medium</span></td>
+                            <td className="p-4"><span className="bg-amber-900/30 text-amber-400 text-xs px-2 py-1 rounded border border-amber-900/50">Medium</span></td>
                             <td className="p-4">Pending</td>
-                            <td className="p-4 text-blue-400 cursor-pointer hover:underline">View</td>
+                            <td className="p-4">
+                                <Link href="/dashboard/clients/USR-2024-005" className="text-blue-400 hover:text-blue-300 font-medium hover:underline">
+                                    View
+                                </Link>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
