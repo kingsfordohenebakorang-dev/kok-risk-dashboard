@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../../data/db';
-import { logger } from '../../utils/logger';
-import { config } from '../../config/env';
+import { prisma } from '../data/db';
+import { logger } from '../utils/logger';
+import { config } from '../config/env';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key';
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { featureStore } from '../../data/feature-store';
-import { logger } from '../../utils/logger';
+import { featureStore } from '../data/feature-store';
+import { logger } from '../utils/logger';
 
 // Schema for transaction ingestion
 const ingestSchema = z.object({
@@ -34,7 +34,7 @@ export const ingestData = async (req: Request, res: Response) => {
     }
 };
 
-import { prisma } from '../../data/db'; // Import DB client
+import { prisma } from '../data/db'; // Import DB client
 
 async function processTransactions(transactions: any[]) {
     // Simple aggregation logic: Calculate scores and save to Redis

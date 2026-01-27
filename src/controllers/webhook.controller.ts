@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { parametricEngine } from '../../core/parametric-engine';
-import { logger } from '../../utils/logger';
+import { parametricEngine } from '../core/parametric-engine';
+import { logger } from '../utils/logger';
 
 const repaymentEventSchema = z.object({
     borrower_id: z.string(),

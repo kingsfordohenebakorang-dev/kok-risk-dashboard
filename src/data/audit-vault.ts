@@ -7,6 +7,7 @@ export interface AuditRecord {
     inputs: any;
     outputs: any;
     timestamp: Date;
+    modelVersion: string;
 }
 
 export const auditVault = {
@@ -22,7 +23,7 @@ export const auditVault = {
                     timestamp: record.timestamp,
                     inputs: record.inputs,
                     outputs: record.outputs,
-                    modelVersion: 'v1.0.0', // TODO: Fetch from dynamic registry
+                    modelVersion: record.modelVersion,
                     environment: process.env.NODE_ENV || 'development'
                 }
             });

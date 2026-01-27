@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { decisionEngine } from '../../core/decision-engine';
-import { logger } from '../../utils/logger';
+import { riskEngineService } from '../services/riskEngine';
+import { logger } from '../utils/logger';
 
 const evaluateSchema = z.object({
     borrower_id: z.string(),
@@ -21,7 +21,7 @@ export const evaluateRisk = async (req: Request, res: Response) => {
 
         const { borrower_id, loan_amount, tenor, monthly_income, employment_type } = validation.data;
 
-        const result = await decisionEngine.evaluate(borrower_id, loan_amount, tenor, monthly_income, employment_type);
+        const result = await riskEngineService.evaluate(borrower_id, loan_amount, tenor, monthly_income, employment_type);
 
         return res.json(result);
     } catch (error) {

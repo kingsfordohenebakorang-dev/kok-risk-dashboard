@@ -7,11 +7,11 @@
     },
     "servers": [
         {
-            "url": "http://localhost:10000/v1",
+            "url": "http://localhost:10000/api/v1",
             "description": "Local Development Server"
         },
         {
-            "url": "https://api.your-fintech.com/v1",
+            "url": "https://api.your-fintech.com/api/v1",
             "description": "Production Server"
         }
     ],
@@ -73,6 +73,46 @@
                 }
             }
         },
+        "/auth/login": {
+            "post": {
+                "summary": "Login to get Bearer Token",
+                "security": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/evaluate": {
             "post": {
                 "summary": "Calculate Risk Score & Premium",
@@ -88,16 +128,21 @@
                                     "loan_amount": {
                                         "type": "number"
                                     },
-                                    "currency": {
-                                        "type": "string",
-                                        "enum": [
-                                            "GHS",
-                                            "NGN",
-                                            "USD"
-                                        ]
-                                    },
                                     "tenor": {
                                         "type": "number"
+                                    },
+                                    "monthly_income": {
+                                        "type": "number",
+                                        "description": "Monthly verified income"
+                                    },
+                                    "employment_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "SALARIED",
+                                            "GIG",
+                                            "SME",
+                                            "INFORMAL"
+                                        ]
                                     }
                                 }
                             }

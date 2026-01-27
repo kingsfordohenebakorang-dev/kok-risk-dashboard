@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '../../utils/logger';
+import { logger } from '../utils/logger';
 
 // In-Memory Cache for Demo (Use Redis in Production)
 const IDEMPOTENCY_CACHE = new Map<string, any>();

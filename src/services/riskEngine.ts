@@ -1,9 +1,9 @@
 import { featureStore } from '../data/feature-store';
-import { riskEngine } from './risk-engine/orchestrator';
+import { riskEngine } from '../core/risk-engine/orchestrator';
 import { auditVault } from '../data/audit-vault';
-import { calculateExpectedLoss, RiskInput, RiskOutput } from './risk-models';
+import { calculateExpectedLoss, RiskInput, RiskOutput } from '../core/risk-models';
 import { ModelRegistry } from '../config/registry';
-import { calculatePremium, PricingOutput } from './pricing';
+import { calculatePremium, PricingOutput } from '../core/pricing';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
 
@@ -15,16 +15,17 @@ interface EvaluationResult {
     reasonCodes: string[];
 }
 
-export class DecisionEngine {
+export class RiskEngineService {
     async evaluate(
         borrowerId: string,
         amount: number,
         tenor: number,
         monthlyIncome?: number,
-        employmentType?: 'SALARIED' | 'GIG' | 'SME' | 'INFORMAL'
+        employmentType?: 'SALARIED' | 'GIG' | 'SME' | 'INFORMAL',
+        modelVersion: string = 'kok_v1'
     ): Promise<EvaluationResult> {
         const decisionId = crypto.randomUUID();
-        logger.info(`Starting evaluation for ${borrowerId}`, { decisionId });
+        logger.info(`Starting evaluation for ${borrowerId}`, { decisionId, modelVersion });
 
         // 0. Permission Check (Open Banking / Data Protection)
         logger.info(`[CONSENT] Verifying Data Access Permissions for ${borrowerId}...`);
@@ -32,15 +33,12 @@ export class DecisionEngine {
         logger.info(`[CONSENT] ✅ Permission Granted: READ_TRANSACTIONS (Time-Bound)`);
 
         // 1. Fetch Features (Simulated/Mocked logic if not in Redis)
-        // In the KOK architecture, we'd fetch raw transactions here.
-        // For now, we pass empty transactions, but in a real implementation we would:
-        // const transactions = await transactionService.getHistory(borrowerId);
         let creditScore = 650;
         let volatility = 0.05;
 
         // 2. Run Risk Models (KOK Risk Engine)
         // DEMO: Inject Mock Data if not provided
-        let transactions = [];
+        let transactions: any[] = [];
         // Simple heuristic to choose scenario based on ID or random for demo
         if (borrowerId.includes('BAD')) {
             const { MockTransactionService } = await import('../data/mock-transactions');
@@ -54,15 +52,36 @@ export class DecisionEngine {
             transactions = MockTransactionService.getHistory(borrowerId, 'GOOD');
         }
 
-        const engineResult = await riskEngine.evaluate({
-            borrowerId,
-            amount,
-            tenor,
-            income: monthlyIncome || 0,
-            employmentType: employmentType || 'INFORMAL',
-            bureauScore: creditScore,
-            transactions: transactions
-        });
+        let engineResult;
+
+        if (modelVersion === 'kok_v2') {
+            // V2 Logic: More aggressive, perhaps better rates for good customers, stricter for bad
+            logger.info('Using KOK v2 Model (Challenger)');
+            engineResult = await riskEngine.evaluate({
+                borrowerId,
+                amount,
+                tenor,
+                income: monthlyIncome || 0,
+                employmentType: employmentType || 'INFORMAL',
+                bureauScore: creditScore,
+                transactions: transactions
+            });
+            // V2 Tweaks (Simulated)
+            engineResult.probabilityOfDefault *= 0.9; // 10% lower PD for v2
+            engineResult.pricing.interestRate *= 0.95; // Slightly cheaper rates
+            engineResult.score += 5;
+        } else {
+            // V1 Logic (Default)
+            engineResult = await riskEngine.evaluate({
+                borrowerId,
+                amount,
+                tenor,
+                income: monthlyIncome || 0,
+                employmentType: employmentType || 'INFORMAL',
+                bureauScore: creditScore,
+                transactions: transactions
+            });
+        }
 
         // 3. Mapping KOK Output to Decision Result
 
@@ -87,10 +106,10 @@ export class DecisionEngine {
 
         // 4. Decision Logic
         const approved = engineResult.approved;
-        const reasonCodes = [];
+        const reasonCodes: string[] = [];
 
         if (!approved) {
-            engineResult.riskFactors.forEach(f => {
+            engineResult.riskFactors.forEach((f: any) => {
                 if (f.impact === 'HIGH') reasonCodes.push(`RISK: ${f.factor} - ${f.description}`);
             });
             if (engineResult.score <= 50) reasonCodes.push('RC001: SCORE_TOO_LOW');
@@ -100,20 +119,30 @@ export class DecisionEngine {
         auditVault.recordDecision({
             decisionId,
             borrowerId,
-            inputs: { ...engineResult.features, amount, tenor },
+            inputs: { ...engineResult.features, amount, tenor, model: modelVersion },
             outputs: { risk: riskMetrics, pricing, approved },
-            timestamp: new Date()
+            timestamp: new Date(),
+            modelVersion: modelVersion
         }).catch(err => logger.error('Audit Vault Failure', err));
 
-        // 6. Shadow Mode (Async)
+        // 6. Shadow Mode (Async) - Only if v1 is running, check v2 performance? 
+        // Or generic shadow check
         if (ModelRegistry.features.enableShadowMode) {
             // ... shadow implementation
+            this.runShadowEvaluation(borrowerId, amount, tenor, {
+                creditScore,
+                inflowVolatility: volatility,
+                loanAmount: amount,
+                tenor,
+                monthlyIncome,
+                employmentType
+            });
         }
 
         return {
             decisionId,
             risk: riskMetrics,
-            pricing: pricing as any, // Cast if PricingOutput type is strict, ideally update the interface
+            pricing: pricing as any,
             approved,
             reasonCodes,
         };
@@ -146,4 +175,4 @@ export class DecisionEngine {
     }
 }
 
-export const decisionEngine = new DecisionEngine();
+export const riskEngineService = new RiskEngineService();

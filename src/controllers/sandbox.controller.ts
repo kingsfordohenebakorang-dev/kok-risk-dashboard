@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { featureStore } from '../../data/feature-store';
+import { featureStore } from '../data/feature-store';
 
 export const resetSandbox = async (req: Request, res: Response) => {
     // Check if we are in non-production
