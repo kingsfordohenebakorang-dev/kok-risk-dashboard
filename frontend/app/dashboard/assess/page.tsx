@@ -38,7 +38,7 @@ export default function NewAssessmentPage() {
             // Use Env Var if available, otherwise fallback to Live Backend
             const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://kok-risk-git-main-kingsfords-projects-45482bf6.vercel.app';
 
-            const res = await fetch(`${API_URL}/v1/evaluate`, {
+            const res = await fetch(`${API_URL}/api/v1/evaluate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

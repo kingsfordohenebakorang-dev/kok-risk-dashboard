@@ -35,7 +35,7 @@ export interface RiskEngineInput {
     amount: number;
     tenor: number;
     income: number;
-    employmentType: 'SALARIED' | 'SME' | 'GIG' | 'INFORMAL';
+    employmentType: 'SALARIED' | 'SME' | 'GIG' | 'INFORMAL' | 'GOVT';
     bureauScore?: number;
     transactions: Transaction[]; // Raw transactions
 }

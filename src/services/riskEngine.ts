@@ -21,7 +21,7 @@ export class RiskEngineService {
         amount: number,
         tenor: number,
         monthlyIncome?: number,
-        employmentType?: 'SALARIED' | 'GIG' | 'SME' | 'INFORMAL',
+        employmentType?: 'SALARIED' | 'GIG' | 'SME' | 'INFORMAL' | 'GOVT',
         modelVersion: string = 'kok_v1'
     ): Promise<EvaluationResult> {
         const decisionId = crypto.randomUUID();

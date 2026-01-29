@@ -8,7 +8,7 @@ const evaluateSchema = z.object({
     loan_amount: z.number().positive(),
     tenor: z.number().int().positive(),
     monthly_income: z.number().optional(),
-    employment_type: z.enum(['SALARIED', 'GIG', 'SME', 'INFORMAL']).optional(),
+    employment_type: z.enum(['SALARIED', 'GIG', 'SME', 'INFORMAL', 'GOVT']).optional(),
 });
 
 export const evaluateRisk = async (req: Request, res: Response) => {

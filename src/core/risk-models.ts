@@ -9,7 +9,7 @@ export interface RiskInput {
     loanAmount: number;
     tenor: number; // in months/days
     monthlyIncome?: number; // New Actuarial Input
-    employmentType?: 'SALARIED' | 'GIG' | 'SME' | 'INFORMAL'; // New Actuarial Input
+    employmentType?: 'SALARIED' | 'GIG' | 'SME' | 'INFORMAL' | 'GOVT'; // New Actuarial Input
 }
 
 export interface RiskOutput {
@@ -56,7 +56,8 @@ function calculatePD(input: RiskInput): number {
             'SALARIED': 0.9,
             'SME': 1.1,
             'GIG': 1.2,
-            'INFORMAL': 1.3
+            'INFORMAL': 1.3,
+            'GOVT': 0.85
         };
         pd *= (multipliers[input.employmentType] || 1.0);
     }
