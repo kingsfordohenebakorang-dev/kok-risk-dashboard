@@ -1,13 +1,24 @@
-# Bank-Grade Risk & Insurance Infrastructure (Unicorn Edition)
+# 🦄 Bank-Grade Risk & Insurance Infrastructure
+
+[![Deploy to Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=kok-risk-dashboard)](https://kok-risk-dashboard.vercel.app)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 
 A production-ready, multi-tenant API for **Credit Risk Assessment**, **Parametric Insurance**, and **Automated Claims**. Built for the African market with provisions for cross-border operability and blockchain transparency.
+
+---
 
 ## 🚀 Key Features
 
 ### 1. Unified Risk Engine
 - **Probability of Default (PD)** & **Loss Given Default (LGD)** modeling.
 - **Multi-Currency Pricing**: Automatically adjusts premiums for **GHS**, **NGN**, **KES**, and **USD** based on real-time volatility buffers.
-- **Shadow Mode**: Runs challenger models (v1.1) in the background to safely test new algorithms.
+- **Sector-Specific Underwriting**: Specialized models for:
+  - 🏛️ **Government Workers** (CAGD Payroll backing) - *Low Risk*
+  - 💼 **Salaried Corporate** - *Low/Medium Risk*
+  - 🛒 **SME Owners** - *Variable Risk*
+  - 🛵 **Gig Economy** (Uber/Bolt) - *Velocity-based Risk*
+  - 🛖 **Informal Traders** - *High Risk*
 
 ### 2. Parametric "Instant Payout" Engine
 - **Automated Claims**: Monitors repayment webhooks. If `days_past_due > 30`, it triggers an instant payout.
@@ -21,7 +32,7 @@ A production-ready, multi-tenant API for **Credit Risk Assessment**, **Parametri
 
 ### 4. Alternative Data Aggregator
 - **Telco Integration**: Ingests Airtime & Mobile Money velocity.
-- **Gig Economy**: Analyzes stability of Uber/Bolt payouts.
+- **Features**: Analyzes zero-balance days, betting frequency, and wallet age.
 
 ---
 
@@ -30,7 +41,7 @@ A production-ready, multi-tenant API for **Credit Risk Assessment**, **Parametri
 *   **Runtime**: Node.js (TypeScript)
 *   **Database**: PostgreSQL 15 (via Prisma ORM)
 *   **Cache**: Redis 7 (Feature Store)
-*   **Infrastructure**: Docker & Docker Compose
+*   **Infrastructure**: Docker & Docker Compose / Vercel Serverless
 *   **Security**: Helmet, CORS, Rate-Limiting, JWT Auth
 
 ---
@@ -39,46 +50,57 @@ A production-ready, multi-tenant API for **Credit Risk Assessment**, **Parametri
 
 ### Authentication
 All endpoints require a JSON Web Token (JWT) or API Key.
-- `POST /v1/auth/register`: Create a new Bank/Fintech account.
-- `POST /v1/auth/login`: Get a Bearer Token.
+*   `POST /api/v1/auth/register`: Create a new Bank/Fintech account.
+*   `POST /api/v1/auth/login`: Get a Bearer Token.
 
 ### Core Risk
-- `POST /v1/evaluate`: Calculate Risk Score & Insurance Premium.
-  - *Inputs*: `borrower_id`, `amount`, `currency`, `tenor`.
-- `POST /v1/ingest`: Upload raw transaction logs (Telco/Bank statements).
-- `GET /v1/explain`: XAI (Explainable AI) reason codes for decisions.
+*   `POST /api/v1/evaluate`: Calculate Risk Score & Insurance Premium.
+    *   *Inputs*: `borrower_id`, `amount`, `currency`, `tenor`, `employment_type`.
+*   `POST /api/v1/ingest`: Upload raw transaction logs (Telco/Bank statements).
+*   `GET /api/v1/explain`: XAI (Explainable AI) reason codes for decisions.
 
 ### Parametric & Webhooks
-- `POST /v1/webhooks/repayment`: Push "Missed Payment" events here.
-  - *Trigger*: `days_past_due > 30` -> Initiates Blockchain Payout.
+*   `POST /api/v1/webhooks/repayment`: Push "Missed Payment" events here.
+    *   *Trigger*: `days_past_due > 30` -> Initiates Blockchain Payout.
 
 ### Compliance
-- `GET /v1/compliance/report`: Download audit logs for Regulators.
-  - *Query Config*: `regulator=DPC_GHANA&start_date=...`
+*   `GET /api/v1/compliance/report`: Download audit logs for Regulators.
+    *   *Query Config*: `regulator=DPC_GHANA&start_date=...`
 
 ---
 
 ## 📦 Setup & Deployment
 
-### Prerequisites
-*   Docker & Docker Compose
+### Cloud Deployment (Recommended)
+This project is optimized for **Vercel** (Frontend + API) and **Render** (Database/Background Services).
 
-### Fast Start
-1.  **Clone & Run**:
-    ```bash
-    docker-compose up --build -d
-    ```
-2.  **Initialize Database**:
-    ```bash
-    npx prisma migrate deploy
-    ```
-3.  **Access Dashboard**:
-    Open `http://localhost:3000/login.html`
+**[👉 Read the Step-by-Step Deployment & Domain Guide](./DEPLOYMENT_GUIDE.md)**
 
-### Development
-1.  **Install Dependencies**: `npm install`
-2.  **Run Locally**: `npm run dev`
-3.  **Test Verification**: `./verify-system.sh`
+### Local Development
+
+1.  **Clone & Install**:
+    ```bash
+    git clone https://github.com/kingsfordohenebakorang-dev/kok-risk-dashboard.git
+    cd kok-risk-dashboard
+    npm install
+    ```
+
+2.  **Environment Setup**:
+    ```bash
+    cp .env.example .env
+    # Configure DATABASE_URL and JWT_SECRET
+    ```
+
+3.  **Run Development Server**:
+    ```bash
+    npm run dev
+    ```
+    Access the dashboard at `http://localhost:3000`.
+
+4.  **Run with Docker**:
+    ```bash
+    docker-compose up --build
+    ```
 
 ---
 
@@ -89,17 +111,5 @@ All endpoints require a JSON Web Token (JWT) or API Key.
 
 ---
 
-## ☁️ Cloud Deployment
-
-**[👉 Read the Step-by-Step Deployment & Domain Guide](./DEPLOYMENT_GUIDE.md)**
-
-<a href="https://render.com/deploy?repo=https://github.com/kingsfordohenebakorang-dev/kok-risk" target="_blank">
-  <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" />
-</a>
-
-1. Click the button above.
-2. Grant Render access to your GitHub account if prompted.
-3. Click **"Apply Blueprint"** to auto-create Database, Redis, and API.
-
----ha
-# kok-risk
+## � License
+This project is licensed under the ISC License.
