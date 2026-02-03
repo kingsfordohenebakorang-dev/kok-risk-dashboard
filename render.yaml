@@ -20,6 +20,10 @@ services:
           property: connectionString
       - key: JWT_SECRET
         generateValue: true
+      - key: API_KEY
+        generateValue: true
+      - key: WEBHOOK_ALLOW_LIST
+        value: "0.0.0.0/0" # Update this in Render Dashboard to your Payment Provider IPs
 
 databases:
   # 2. Managed PostgreSQL (Audit Vault)

@@ -12,12 +12,25 @@ const app = express();
 // Trust Proxy (Required for Cloud/Render SSL)
 app.enable('trust proxy');
 
-// Security & Middleware
-app.use(helmet()); // Sets various HTTP headers for security
+// 1. Infrastructure Trust Boundary
+import { trustBoundary, requestIdentifier } from './core/security/middleware';
+app.use(trustBoundary);
+
+// 2. Baseline Security Hardening
+app.use(helmet());
 app.use(cors());
-app.use(express.json());
+
+// 3. Request Identity & Global Rate Limits
+// (Global generic limit can be added here if needed, but we use specific ones in routes)
+app.use(requestIdentifier);
+
+// 4. Body Parsing
+app.use(express.json({ limit: '100kb' })); // Limit body size to prevent DoS
+
+// 5. Observability
 app.use(httpLogger);
-app.use(express.static('public')); // Serve frontend files
+
+app.use(express.static('public'));
 
 // Health Check
 app.get('/health', (req, res) => {
@@ -35,7 +48,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
 // Documentation Spec Endpoint (Public)
 app.get('/api/v1/docs/spec', (req, res) => res.json(openApiSpec));
 
-// API Routes
+// 6. - 10. API Routes (Auth, Validation, Biz Logic handled within)
 app.use('/api/v1', apiRoutes);
 
 

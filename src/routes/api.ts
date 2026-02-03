@@ -5,33 +5,75 @@ import * as ExplainController from '../controllers/explain.controller';
 import * as SandboxController from '../controllers/sandbox.controller';
 import * as AuthController from '../controllers/auth.controller';
 import * as ScoreController from '../controllers/score.controller';
-import { authenticate } from '../middlewares/auth.middleware';
-import { apiLimiter, authLimiter } from '../middlewares/rate-limit';
-
-const router = Router();
-
-// Public Routes (Auth) - Stricter Rate Limit
-router.post('/auth/register', authLimiter, AuthController.register);
-router.post('/auth/login', authLimiter, AuthController.login);
-
-// Gateway: Authentication & Standard Rate Limiting
-router.use(apiLimiter);
-router.use(authenticate);
-
 import * as WebhookController from '../controllers/webhook.controller';
 import * as ComplianceController from '../controllers/compliance.controller';
 
-// ... existing imports
+import { authenticate } from '../middlewares/auth.middleware';
+import {
+    evaluateLimiter,
+    ingestLimiter,
+    authLimiter,
+    complianceLimiter,
+    velocityCheck
+} from '../core/security/rate-limiter';
+import {
+    validateInput,
+    IngestSchema,
+    EvaluateSchema
+} from '../core/security/validation';
+import {
+    ipAllowList,
+    replayProtection
+} from '../core/security/middleware';
 
-// Core Endpoints
-router.post('/ingest', IngestController.ingestData);
-router.post('/evaluate', EvaluateController.evaluateRisk);
-router.post('/score', ScoreController.scoreRisk); // New Endpoint
+const router = Router();
+
+// --- Public Routes ---
+
+// Auth with Strict Limiting
+router.post('/auth/register', authLimiter, AuthController.register);
+router.post('/auth/login', authLimiter, AuthController.login);
+
+// Webhooks (Public but Secured)
+// IP Allow List + Replay Protection + Rate Limit
+router.post('/webhooks/repayment',
+    ipAllowList,
+    replayProtection,
+    WebhookController.handleRepaymentWebhook
+);
+
+// --- Protected Routes (Require Auth) ---
+router.use(authenticate);
+
+// 1. Ingestion: High Volume, Validated
+router.post('/ingest',
+    ingestLimiter,
+    validateInput(IngestSchema),
+    IngestController.ingestData
+);
+
+// 2. Evaluation: Strict Limit + Velocity Check + Validation
+router.post('/evaluate',
+    evaluateLimiter,
+    velocityCheck,
+    validateInput(EvaluateSchema),
+    EvaluateController.evaluateRisk
+);
+
+router.post('/score',
+    evaluateLimiter,
+    validateInput(EvaluateSchema),
+    ScoreController.scoreRisk
+);
+
+// 3. Compliance: Very Restricted
+router.get('/compliance/report',
+    complianceLimiter,
+    ComplianceController.getComplianceReport
+);
+
+// Standard Endpoints
 router.get('/explain', ExplainController.explainDecision);
 router.post('/sandbox/reset', SandboxController.resetSandbox);
-
-// Advanced Endpoints (Unicorn Features)
-router.post('/webhooks/repayment', WebhookController.handleRepaymentWebhook);
-router.get('/compliance/report', ComplianceController.getComplianceReport);
 
 export const apiRoutes = router;
