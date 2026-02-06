@@ -174,22 +174,7 @@ export default function LoginPage() {
                     </button>
                 </form>
 
-                <div className="mt-6">
-                    <details className="text-xs text-slate-500 cursor-pointer">
-                        <summary className="hover:text-blue-400 transition-colors">View Demo Credentials</summary>
-                        <div className="mt-2 p-3 bg-slate-900/50 rounded border border-slate-700 text-left space-y-2">
-                            <div>
-                                <span className="font-bold text-slate-300">Analyst:</span> analyst@risk.co / view123
-                            </div>
-                            <div>
-                                <span className="font-bold text-slate-300">Admin:</span> demo@risk.co / demo123
-                            </div>
-                            <div>
-                                <span className="font-bold text-slate-300">Underwriter:</span> underwriter@risk.co / under123
-                            </div>
-                        </div>
-                    </details>
-                </div>
+
 
                 <div className="mt-6 text-center text-xs text-slate-500">
                     SECURED BY AUDIT VAULT • 256-BIT ENCRYPTION
